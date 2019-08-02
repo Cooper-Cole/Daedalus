@@ -1,25 +1,18 @@
 {
   "name": "daedalus",
   "version": "1.0.0",
-  "description": "decentralized solar distribution",
-  "main": "index.js",
+  "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "compileContract": "solcjs --bin --abi DaedalusExchange.sol"
+    "compile": "solcjs --abi --bin Daedalus.sol",
+    "start": "node script.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Alyssa-Cooper/Daedalus.git"
-  },
-  "author": "ethan-arrowood, alyssa-cooper",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Alyssa-Cooper/Daedalus/issues"
-  },
-  "homepage": "https://github.com/Alyssa-Cooper/Daedalus#readme",
+  "contributors": [
+    "Alyssa Cooper",
+    "Ethan Arrowood <ethan.arrowood@gmail.com>"
+  ],
+  "license": "MIT",
   "dependencies": {
-    "ethers": "^4.0.33",
-    "solc": "^0.5.3",
-    "web3": "^1.2.0"
+    "solc": "0.5.3",
+    "web3": "1.2.0"
   }
 }

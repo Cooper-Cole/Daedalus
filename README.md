@@ -17,9 +17,9 @@ Daedalus is a decentralized platform for the distribution of renewable energy th
 - Fork the project
 - Create a branch for each feature and submit a PR.
 
-
 ## 🏁 Deployment <a name = "deployment"></a>
-
+- `npm run compile`
+- `node deploy.js`
 
 ## ✍️ Authors <a name = "authors"></a>
 - [@alyssa-cooper](https://github.com/alyssa-cooper) 
