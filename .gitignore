@@ -1,0 +1,4 @@
+.vscode
+*.bin
+*.abi
+node_modules/
