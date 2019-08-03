@@ -1,7 +1,7 @@
 const Web3 = require('web3')
 const fs = require('fs')
 
-const web3 = new Web3('ws://localhost:7545')
+const web3 = new Web3('ws://localhost:8545')
 
 const Daedalus_bytecode = fs.readFileSync('Daedalus_sol_Daedalus.bin', { encoding: 'utf8' })
 const Daedalus_abi = JSON.parse(fs.readFileSync('Daedalus_sol_Daedalus.abi', { encoding: 'utf8' }))
