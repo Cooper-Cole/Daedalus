@@ -57,10 +57,8 @@ contract Surplus {
 
         if (amnt > 0) {
             pendingReturns[msg.sender] = 0;
-            if (!msg.sender.send(amnt)) {
-                pendingReturns[msg.sender] = amnt;
-                return false;
-            }
+
+            msg.sender.transfer(amnt);
         }
 
         return true;
