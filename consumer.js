@@ -27,7 +27,7 @@ class Consumer extends DaedalusNetworkClient {
       if (this.currentSurplus !== undefined) { return }
 
       // otherwise set the surplus contract and continue
-      this.currentSurplus = new web3.eth.Contract(
+      this.currentSurplus = new this.web3.eth.Contract(
         JSON.parse(this.contractInterfaces.Surplus.abi),
         surplusAddress
       )
@@ -72,8 +72,13 @@ class Consumer extends DaedalusNetworkClient {
         }
       })
 
-      let bidReceipt = await this._makeBid(this.initialBid) // make initial bid after setting event handlers for surplus contract
-      // if the initial bid is too low this might throw an error -- should catch and ignore or make another bid
+      try {
+        let bidReceipt = await this._makeBid(this.initialBid) // make initial bid after setting event handlers for surplus contract
+      } catch (err) {
+        if (err.message.includes('Your bid does not exceed the current highest bid')) {
+          
+        }
+      }
 
       // this implementation currently ignores surplus contracts created while currently involved with an existing contract; next implementation should have a queue system that will allow the consumer to bid on an existing surplus event after they finish bidding on their current one. Ideally, the consumer should be able to participate in multiple surplus contract biddings at the same time.
     })
@@ -92,11 +97,11 @@ class Consumer extends DaedalusNetworkClient {
   }
 
   async _makeBid (bid) {
-    const bidReceipt = await Surplus.methods.bid().send({
-      from: account,
+    const bidReceipt = await this.currentSurplus.methods.bid().send({
+      from: this.accountHash,
       gas: 6721975,
       gasPrice: 20000000000,
-      value: web3.utils.toWei(bid.toString(), 'ether')
+      value: this.web3.utils.toWei(bid.toString(), 'ether')
     })
     return bidReceipt
   }

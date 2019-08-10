@@ -24,9 +24,8 @@ class Supplier extends DaedalusNetworkClient {
       gas: 6721975,
       gasPrice: 20000000000
     })
-    console.log(newSurplusReceipt)
     const surplusAddress = newSurplusReceipt.events.SurplusCreated.returnValues._surplusAddress
-    const Surplus = new this.web3.eth.Contract(this.contractInterfaces.Surplus.abi, surplusAddress)
+    const Surplus = new this.web3.eth.Contract(JSON.parse(this.contractInterfaces.Surplus.abi), surplusAddress)
     return setTimeoutPromise(1000 * 10).then(async () => {
       return await Surplus.methods.exchangeEnd().send({
         from: this.accountHash,

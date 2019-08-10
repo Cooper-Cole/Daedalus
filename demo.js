@@ -1,22 +1,34 @@
-const { resolveTransactionReceipt } = require('./deploy')
+const deployDaedalusContract = require('./deployDaedalusContract')
 const Consumer = require('./Consumer')
 const Supplier = require('./Supplier')
+const getAccountValues = require('./getAccountValues')
+const Web3 = require('web3')
+
+function print(accountsWithBalances) {
+  const web3 = new Web3()
+  for (let a of accountsWithBalances) {
+    console.log(`Account ${a.account} - ${web3.utils.fromWei(a.balance, 'ether')}`)
+  }
+}
 
 async function main() { // do not catch errors; let function call handle it
-  let txReceipt = await resolveTransactionReceipt(0)
+  let txReceipt = await deployDaedalusContract(0, true)
 
   const S1 = new Supplier()
   await S1.initialize(1)
 
-  const C1 = new Consumer()
+  const C1 = new Consumer(1, 10)
   await C1.initialize(2)
 
-  const C2 = new Consumer()
+  const C2 = new Consumer(1, 10)
   await C2.initialize(3)
+
+  print(await getAccountValues())
 
   S1.surplusEE.once('surplus', async excessEnergy => {
     const exchangeEndReceipt = await S1._createSurplus(excessEnergy)
     console.log(`Bid Winner: ${exchangeEndReceipt.events.ExchangeEnded.returnValues.winner}`)
+    print(await getAccountValues())
     return exchangeEndReceipt.events.ExchangeEnded.returnValues.winner
   })
   // log values
@@ -25,7 +37,7 @@ async function main() { // do not catch errors; let function call handle it
   S1.battery.addEnergy(50) // Max is reached here, next addEnergy will emit 'excess' invent
   S1.battery.addEnergy(50) // this should kick off the Surplus contract creation
 
-
+  
 }
 
 // 1. deploy Daedalus
