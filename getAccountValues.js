@@ -11,4 +11,14 @@ async function main() {
   }
 }
 
+function returnAccountValues(account) {
+    
+    return console.log(`Account ${account} - ${web3.utils.fromWei(balance, 'ether')}`)
+}
+
+
 main()
+
+/* export function to log account values and return
+acct energy functions later*/
+module.exports = returnAccountValues;
