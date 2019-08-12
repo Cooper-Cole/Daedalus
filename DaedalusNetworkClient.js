@@ -16,11 +16,12 @@ class DaedalusNetworkClient {
     this.web3 = new Web3(ethNetwork || 'ws://localhost:8545') // default to local ganache server
     this.contractInterfaces = getContractInterfaces()
     this.setDaedalusContract(daedalusHash)
-    this.energy = 0
   }
 
   async initialize (account) {
-    this.accountHash = await getAccountHash(account)
+    let hash = await getAccountHash(account)
+    this.accountHash = hash
+    return hash
   }
 
   setDaedalusContract(daedalusHash) {

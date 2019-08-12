@@ -2,9 +2,14 @@ const util = require('util');
 const setTimeoutPromise = util.promisify(setTimeout);
 const EventEmitter = require('events')
 const Battery = require('./battery')
-
 const DaedalusNetworkClient = require('./DaedalusNetworkClient')
+
 class Supplier extends DaedalusNetworkClient {
+  /**
+   * Constructor for Supplier initializes battery with a max size of 100. Creates an event emitter on the property this.surplusEE which will emit a 'surplus' event when the internal battery emits an 'excess' event
+   * @param {string} [ethNetwork] A local etherium test network - defaults to ws://localhost:8545 (Passed to the DaedalusNetworkClient constructor)
+   * @param {string} [daedalusHash] Daedalus contract hash - defaults to the local out file (Passed to the DaedalusNetworkClient constructor)
+   */
   constructor (ethNetwork, daedalusHash) {
     super(ethNetwork, daedalusHash)
     this.battery = new Battery(100)
@@ -16,8 +21,10 @@ class Supplier extends DaedalusNetworkClient {
     })
   }
 
-  start () {}
-
+  /**
+   * Creates a new surplus and returns a timeout promise of 10 seconds. Once the timer completes it will automatically fire the exchangeEnd() method on the surplus contract.
+   * @param {number} excessEnergy Energy to distribute
+   */
   async _createSurplus (excessEnergy) {
     const newSurplusReceipt = await this.DaedalusContract.methods.newSurplus(excessEnergy).send({
       from: this.accountHash,
