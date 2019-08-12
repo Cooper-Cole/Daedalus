@@ -42,10 +42,11 @@ class Consumer extends DaedalusNetworkClient {
           // attempt to increase bid
           // this will error if someone else outbids at the same time. Should catch and ignore (make higher bid on the incoming HBI event)
           if (event.returnValues.bidder !== this.accountHash) {
-            let nextBid = event.returnValues.amount *= this.bidFactor
-            if (nextBid < this.maxBid) await this._makeBid(nextBid)
-            else {
-              console.log('Maximum bid reached')
+            let nextBid = Consumer.getNextBid(this.web3.utils.fromWei(event.returnValues.amount, 'ether'), this.bidFactor)
+            if (nextBid < this.maxBid) {
+              await this._makeBid(nextBid)
+            } else {
+              this.log('Maximum bid reached')
             }
           }
         } catch (err) {
@@ -64,7 +65,7 @@ class Consumer extends DaedalusNetworkClient {
         if (event.returnValues.highestBidder !== this.accountHash) {
           try {
             let withdrawReceipt = await this._finalize()
-            console.log('Withdraw successful. Surplus Event Complete')
+            this.log('Withdraw successful. Surplus Event Complete')
           } catch (err) {
             console.error(err)
             process.exit(1)
@@ -72,16 +73,28 @@ class Consumer extends DaedalusNetworkClient {
         }
       })
 
+      this.log(`Making Initial Bid ${this.initialBid}`)
       try {
-        let bidReceipt = await this._makeBid(this.initialBid) // make initial bid after setting event handlers for surplus contract
+        await this.makeInitialBid(this.initialBid)
       } catch (err) {
-        if (err.message.includes('Your bid does not exceed the current highest bid')) {
-          
-        }
+        throw err
       }
 
       // this implementation currently ignores surplus contracts created while currently involved with an existing contract; next implementation should have a queue system that will allow the consumer to bid on an existing surplus event after they finish bidding on their current one. Ideally, the consumer should be able to participate in multiple surplus contract biddings at the same time.
     })
+  }
+
+  async makeInitialBid (initialBid) {
+    try {
+      return await this._makeBid(initialBid)
+    } catch (err) {
+      if (err.message.includes('Your bid does not exceed the current highest bid')) {
+        let nextBid = Consumer.getNextBid(initialBid, this.bidFactor)
+        return await this.makeInitialBid(nextBid)
+      } else {
+        throw err
+      }
+    }
   }
 
   async _finalize () {
@@ -97,6 +110,7 @@ class Consumer extends DaedalusNetworkClient {
   }
 
   async _makeBid (bid) {
+    this.log(`Bidding: ${bid}`)
     const bidReceipt = await this.currentSurplus.methods.bid().send({
       from: this.accountHash,
       gas: 6721975,
@@ -104,6 +118,10 @@ class Consumer extends DaedalusNetworkClient {
       value: this.web3.utils.toWei(bid.toString(), 'ether')
     })
     return bidReceipt
+  }
+
+  static getNextBid (prevBid, bidFactor) {
+    return Math.round(1000 * (prevBid * bidFactor)) / 1000
   }
 }
 

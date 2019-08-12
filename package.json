@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "compile": "solcjs --abi --bin Daedalus.sol",
-    "start": "node script.js"
+    "demo": "node demo"
   },
   "contributors": [
     "Alyssa Cooper",

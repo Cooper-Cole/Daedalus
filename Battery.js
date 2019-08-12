@@ -1,5 +1,15 @@
 const EventEmitter = require('events')
 
+/**
+ * Battery mocks the flow of energy into a DaedalusNetworkClient.
+ * It is an EventEmitter that emits 3 unique events
+ * - 'increase' when it gains energy
+ * - 'decrease' when it looses energy'
+ * - 'excess' when it gains more energy than its assigned maximum
+ * 
+ * Unlike a real battery this fake one stores past it's maximum limit. This detail is not important for the simplified demonstration purposes and is thus ignored.
+ * 
+ */
 class Battery extends EventEmitter {
   constructor (maximum) {
     super()

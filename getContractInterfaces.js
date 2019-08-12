@@ -1,5 +1,10 @@
 const fs = require('fs')
 
+/**
+ * Returns an object containing the interfaces of the Daedalus and Surplus contracts
+ * 
+ * @param {string} [interface] return an explicit set of interfaces of a given contract type
+ */
 function getContractInterfaces(interface) {
   try {
     if (interface) {

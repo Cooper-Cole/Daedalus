@@ -19,9 +19,12 @@ async function main() { // do not catch errors; let function call handle it
 
   const C1 = new Consumer(1, 10)
   await C1.initialize(2)
-
+  
   const C2 = new Consumer(1, 10)
   await C2.initialize(3)
+  
+  C1.start()
+  C2.start()
 
   print(await getAccountValues())
 
@@ -36,8 +39,6 @@ async function main() { // do not catch errors; let function call handle it
   S1.battery.addEnergy(50)
   S1.battery.addEnergy(50) // Max is reached here, next addEnergy will emit 'excess' invent
   S1.battery.addEnergy(50) // this should kick off the Surplus contract creation
-
-  
 }
 
 // 1. deploy Daedalus
@@ -59,8 +60,8 @@ async function main() { // do not catch errors; let function call handle it
 
 if (require.main === module) {
   main().then(_ => {
-    // console.log('Demo Complete')
-    // process.exit(0)
+    console.log('Demo Complete')
+    process.exit(0)
   }).catch(err => {
     console.error(err)
     process.exit(1)

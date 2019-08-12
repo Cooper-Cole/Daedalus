@@ -1,13 +1,11 @@
 const Web3 = require('web3')
 
-async function main(ethNetwork) {
-  const web3 = new Web3(ethNetwork || 'ws://localhost:8545')
-  const accountsWithBalances = await getAccountValues
-  for (let a of accountsWithBalances) {
-    console.log(`Account ${a.account} - ${web3.utils.fromWei(a.balance, 'ether')}`)
-  }
-}
-
+/**
+ * This function returns all of the account values from a local etherium test network (such as Ganache)
+ * The return value is an array of objects with associative `account` and `balance` properties.
+ * 
+ * @param {string} [ethNetwork] A local etherium test network - defaults to ws://localhost:8545
+ */
 async function getAccountValues(ethNetwork) {
   const web3 = new Web3(ethNetwork || 'ws://localhost:8545')
   const res = []
@@ -24,7 +22,17 @@ async function getAccountValues(ethNetwork) {
 acct energy functions later*/
 module.exports = getAccountValues;
 
+// Command Line Usage
+
 if (require.main === module) {
-  let args = process.argv.slice(2); // allow command line use 
+  let args = process.argv.slice(2);
   main(...args).then(() => {})
+}
+
+async function main(ethNetwork) {
+  const web3 = new Web3(ethNetwork || 'ws://localhost:8545')
+  const accountsWithBalances = await getAccountValues
+  for (let a of accountsWithBalances) {
+    console.log(`Account ${a.account} - ${web3.utils.fromWei(a.balance, 'ether')}`)
+  }
 }
