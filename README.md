@@ -30,18 +30,18 @@ We achieved this by developing a smart contract, _Daedalus_, to initiate a contr
 
 ## Features (20 pts)
 1. Smart Contract
+  - Contract Factory pattern for creating many instances of utility contract
 2. Autonomous Web3 backend
+  - Fully documented scripts with an object-oriented approach to client-client interactions
 3. Single command demo
+  - `npm run demo`
 4. Fully expandable Web3 API
+  - Relevant code snippets have both exported members and command-line executable parts
+  - Functions and Classes are documented and contain valid assertions for parameters
 
 ## Demo video (20 pts)
 
-Upload your demo video to youtube and put a link here. Basically, the video content is very much like the quick live demo you gave during your final presentation with the followings:
-1. Project description
-2. How to run the app
-3. Quick walkthrough of all the features of your app
-
-Make it short and interesting.
+[Demo Video](https://youtu.be/5V8W-mwndFQ)
 
 ## Team members
 
